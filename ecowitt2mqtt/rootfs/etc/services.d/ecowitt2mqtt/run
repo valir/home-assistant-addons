@@ -35,16 +35,20 @@ if bashio::config.has_value 'mqtt_password'; then
 fi
 
 # Fail if we're missing MQTT config:
-if [[ -z "${MQTT_HOST}" || -z "${MQTT_PORT}" || -z "${MQTT_USERNAME}" || -z "${MQTT_PASSWORD}" ]]; then
-  bashio::log.fatal "MQTT configuration not found; cannot continue."
+if [[ -z "${MQTT_HOST}" || -z "${MQTT_PORT}" ]]; then
+  bashio::log.fatal "MQTT host configuration not found; cannot continue."
   exit 1
 fi
 
 # Log the MQTT parameters:
 bashio::log.info "Using MQTT host: ${MQTT_HOST}"
 bashio::log.info "Using MQTT port: ${MQTT_PORT}"
-bashio::log.info "Using MQTT username: ${MQTT_USERNAME}"
-bashio::log.info "Using MQTT password: REDACTED"
+if [[ ! -z "${MQTT_USERNAME}" ]]; then
+  bashio::log.info "Using MQTT username: ${MQTT_USERNAME}"
+  bashio::log.info "Using MQTT password: REDACTED"
+else
+  bashio::log.info "No MQTT credentials provided."
+fi
 
 # Define config options to use:
 ADDL_CONFIG_OPTIONS=()
